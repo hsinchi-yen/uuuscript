@@ -3,6 +3,7 @@
  Purpose           : For Quick Generate hands-on uuu flash script
  Script name       : UUU_FlashFileGen.sh
  Author            : lancey
+ Dept.             : R&D SIT
  Date created      : 20210514
 -----------------------------------------------------------------------
  Revision History  : 1.0
@@ -11,6 +12,61 @@
  20210514   lancey      0      initial draft for PD test purpose for all imx6,imx7,imx8 series
 ************************************************************************
 COMMENTS
+imx8_flash_script_gen()
+{
+  cat <<EOF >>$1
+  #!/bin/bash
+
+  EMMCSCRIPT=$EMMCSCRIPT
+  BINFILE=$BINFILE
+  SPLFILE=$SPLFILE
+  UBOOTFILE=$UBOOTFILE
+  EMMCIMAGE=$EMMCIMAGE
+
+  echo "Script description :"
+  echo "$UUU -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE"
+  echo
+  echo "command perform ..."
+  echo
+  sudo ./$UUU -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE
+EOF
+
+sudo chmod +x $1
+}
+
+imx6_7_flash_script_gen()
+{
+  cat <<EOF >>$1
+  #!/bin/bash
+
+  EMMCSCRIPT=$EMMCSCRIPT
+  SPLFILE=$SPLFILE
+  UBOOTFILE=$UBOOTFILE
+  EMMCIMAGE=$EMMCIMAGE
+
+  echo "Script description :"
+  echo "$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE"
+  echo
+  echo "command perform ..."
+  echo
+  sudo ./$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE
+EOF
+
+sudo chmod +x $1
+}
+
+Term_emu_script_gen()
+{
+  TERM_EMU="xfce4-terminal -H -e"
+  #Create Terminal shortcut with xfce4-terminal
+  cat <<EOF >>$1
+  #!/bin/bash
+  $TERM_EMU ./$FLASHCODE
+EOF
+
+sudo chmod +x $1
+}
+
 SOCNameFinder()
 {
   #$1 is the filename
@@ -41,14 +97,15 @@ SOMNameFinder()
    "edm-g-imx8mn" \
    "edm-imx7" "tep1-imx7" "pico-imx7" \
    "axon-imx6" "edm-imx6" "pico-imx6" "tek-imx6" \
-   )
+   "pico-imx6ul" "tek-imx6ul" "tep-imx6ul")
 
   #imx8mm: axon-imx8mm, edm-g-imx8mm, flex-imx8mm, pico-imx8mm, xore-imx8mm
   #imx8mp: axon-imx8mp, edm-g-imx8mp
   #imx8mq: edm-imx8mq, pico-imx8mq
   #imx8mn: edm-g-imx8mn
-  #edm-imx7, tep1-imx7, pico-imx7
-  #axon-imx6, edm-imx6, pico-imx6, tek-imx6
+  #imx7:edm-imx7, tep1-imx7, pico-imx7
+  #imx6:axon-imx6, edm-imx6, pico-imx6, tek-imx6
+  #imx6ul:pico-imx6ul, tek-imx6ul, tep-imx6ul
 
   for SOM in "${SOM_ARR[@]}"; do
     echo "$Img" | grep "$SOM" > /dev/null 2>&1
@@ -63,11 +120,24 @@ SOMNameFinder()
 
 }
 
-EMMCIMAGE="tek-imx6_pico-nymph_rescue#134_hdmi_20210312.img"
-FLASHCODE="imx8_flash_code.sh"
+if [ "$1" != "" ]; then
+    EMMCIMAGE=$1
+else
+    EMMCIMAGE="noname.img"
+fi
+
+if [ "$2" != "" ]; then
+    FLASHCODE=$2
+else
+    FLASHCODE="noname.sh"
+fi
+
+FLASHCODE_TERMEMU=$3
+
+#EMMCIMAGE="tek-imx6_pico-nymph_rescue#134_hdmi_20210312.img"
+#FLASHCODE="imx8_flash_code.sh"
 
 #Flash EMMC script post-fixed word.
-
 #common path definition
 UUU="uuu_flash"
 IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
@@ -104,58 +174,62 @@ echo $SOCID
 SOMID=$(SOMNameFinder $EMMCIMAGE)
 echo $SOMID
 
-
+#Use SOCID decide the uuu flash script type - phrase 1
 case $SOCID in
   imx8mm|imx8mp|imx8mn|imx8mq)
     EMMCSCRIPT="emmc_img"
     BINFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$BOARDTYPE_Tail
-    SPLFILE=""
-    UBOOTFILE=""
     ;;
   imx6)
     EMMCSCRIPT="emmc_imx6_img"
-    BINFILE=""
     SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
     UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
     ;;
   imx6ul)
-    EMMCSCRIPT="emmc_imx6_img"
-    BINFILE=""
+    EMMCSCRIPT="emmc_imx6ul_img"
     SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
     UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
     ;;
   imx7)
     EMMCSCRIPT="emmc_imx7_img"
-    BINFILE=""
     SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
     UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
     ;;
 esac
 
-readlink $UUU
-echo $EMMCSCRIPT
-echo $BINFILE
-echo $SPLFILE
-echo $UBOOTFILE
-echo $EMMCIMAGE
+#Use SOCID decide the uuu flash script type - phrase 2
+case $SOCID in
+  imx8mm|imx8mp|imx8mn|imx8mq)
+    BINFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$BOARDTYPE_Tail
+    ;;
+  imx6|imx6ul|imx7)
+    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
+    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
+    ;;
+esac
+
+#readlink $UUU
+#echo $EMMCSCRIPT
+#echo $BINFILE
+#echo $SPLFILE
+#echo $UBOOTFILE
+#echo $EMMCIMAGE
 
 # Generate uuu flash script
 
-cat <<EOF >>$FLASHCODE
-#!/bin/bash
+if [ "$BINFILE" != "" ]; then
+    imx8_flash_script_gen $FLASHCODE
+else
+    imx6_7_flash_script_gen $FLASHCODE
+fi
 
-EMMCSCRIPT=$EMMCSCRIPT
-BINFILE=$BINFILE
-SPLFILE=$SPLFILE
-UBOOTFILE=$UBOOTFILE
-EMMCIMAGE=$EMMCIMAGE
+if [ "$FLASHCODE_TERMEMU" == "" ]; then
+  Term_emu_script_gen "emu_$FLASHCODE"
+else
+  Term_emu_script_gen "$FLASHCODE_TERMEMU"
+fi
 
-echo "Script description :"
-echo "$UUU -d -b $EMMCSCRIPT $BINFILE $SPLFILE $UBOOTFILE $EMMCIMAGE"
-echo
-echo "command perform ..."
-echo
-sudo ./$UUU -d -b $EMMCSCRIPT $BINFILE $SPLFILE $UBOOTFILE $EMMCIMAGE
-EOF
+sync
+sleep 1
 
-sudo chmod +x $FLASHCODE
+echo "Script $FLASHCODE is Generated."
