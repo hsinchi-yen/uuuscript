@@ -3,7 +3,6 @@
  Purpose           : For Quick Generate hands-on uuu flash script
  Script name       : UUU_FlashFileGen.sh
  Author            : lancey
- Dept.             : R&D SIT
  Date created      : 20210514
 -----------------------------------------------------------------------
  Revision History  : 1.0
@@ -61,12 +60,14 @@ Term_emu_script_gen()
   #Create Terminal shortcut with xfce4-terminal
   cat <<EOF >>$1
   #!/bin/bash
+  #launch a xfce4-terminal utility with script
   $TERM_EMU ./$FLASHCODE
 EOF
 
 sudo chmod +x $1
 }
 
+#the sub function for determining the soc name
 SOCNameFinder()
 {
   #$1 is the filename
@@ -85,7 +86,7 @@ SOCNameFinder()
   done
 
 }
-
+#the sub function for determining the som name
 SOMNameFinder()
 {
   #$1 is the filename
@@ -178,22 +179,15 @@ echo $SOMID
 case $SOCID in
   imx8mm|imx8mp|imx8mn|imx8mq)
     EMMCSCRIPT="emmc_img"
-    BINFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$BOARDTYPE_Tail
     ;;
   imx6)
     EMMCSCRIPT="emmc_imx6_img"
-    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
-    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
     ;;
   imx6ul)
     EMMCSCRIPT="emmc_imx6ul_img"
-    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
-    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
     ;;
   imx7)
     EMMCSCRIPT="emmc_imx7_img"
-    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
-    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
     ;;
 esac
 
@@ -218,8 +212,10 @@ esac
 # Generate uuu flash script
 
 if [ "$BINFILE" != "" ]; then
+    # if it's imx8 soc use following script
     imx8_flash_script_gen $FLASHCODE
 else
+    # if it's imx6/7 soc use following script
     imx6_7_flash_script_gen $FLASHCODE
 fi
 
