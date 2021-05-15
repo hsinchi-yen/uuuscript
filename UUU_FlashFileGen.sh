@@ -170,10 +170,8 @@ PWD="$(echo ~)"
 ln -s "$PWD$IMX_UUU_TOOL$UUU_DST" "$UUU"
 
 SOCID=$(SOCNameFinder $EMMCIMAGE)
-echo $SOCID
 
 SOMID=$(SOMNameFinder $EMMCIMAGE)
-echo $SOMID
 
 #Use SOCID decide the uuu flash script type - phrase 1
 case $SOCID in
@@ -228,5 +226,7 @@ fi
 sync
 sleep 1
 
-echo "Script $FLASHCODE is Generated."
+echo
+echo "Script - $FLASHCODE is Generated Succeffully."
+echo
 
