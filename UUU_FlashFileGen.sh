@@ -3,6 +3,7 @@
  Purpose           : For Quick Generate hands-on uuu flash script
  Script name       : UUU_FlashFileGen.sh
  Author            : lancey
+ Dept.             : R&D SIT
  Date created      : 20210514
 -----------------------------------------------------------------------
  Revision History  : 1.0
@@ -56,7 +57,7 @@ sudo chmod +x $1
 
 Term_emu_script_gen()
 {
-  TERM_EMU="xfce4-terminal -H -e "
+  TERM_EMU="xfce4-terminal -H -e"
   #Create Terminal shortcut with xfce4-terminal
   cat <<EOF >>$1
   #!/bin/bash
@@ -131,17 +132,12 @@ else
     FLASHCODE="noname.sh"
 fi
 
-if [ "$3" != "" ]; then
-    FLASHCODE_TERMEMU=$3
-else
-    FLASHCODE_TERMEMU="emu_noname.sh"
-fi
+FLASHCODE_TERMEMU=$3
 
 #EMMCIMAGE="tek-imx6_pico-nymph_rescue#134_hdmi_20210312.img"
 #FLASHCODE="imx8_flash_code.sh"
 
 #Flash EMMC script post-fixed word.
-
 #common path definition
 UUU="uuu_flash"
 IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
@@ -212,12 +208,12 @@ case $SOCID in
     ;;
 esac
 
-readlink $UUU
-echo $EMMCSCRIPT
-echo $BINFILE
-echo $SPLFILE
-echo $UBOOTFILE
-echo $EMMCIMAGE
+#readlink $UUU
+#echo $EMMCSCRIPT
+#echo $BINFILE
+#echo $SPLFILE
+#echo $UBOOTFILE
+#echo $EMMCIMAGE
 
 # Generate uuu flash script
 
@@ -227,8 +223,13 @@ else
     imx6_7_flash_script_gen $FLASHCODE
 fi
 
-Term_emu_script_gen "$FLASHCODE_TERMEMU"
+if [ "$FLASHCODE_TERMEMU" == "" ]; then
+  Term_emu_script_gen "emu_$FLASHCODE"
+else
+  Term_emu_script_gen "$FLASHCODE_TERMEMU"
+fi
 
 sync
 sleep 1
+
 echo "Script $FLASHCODE is Generated."
