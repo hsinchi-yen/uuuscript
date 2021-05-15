@@ -15,7 +15,7 @@ SOCNameFinder()
 {
   #$1 is the filename
   Img=$1
-  SOC_ARR=(imx8 imx7 imx6)
+  SOC_ARR=(imx8mm imx8mn imx8mq imx8mp imx6 imx6ul imx7)
 
   for SOC in "${SOC_ARR[@]}"; do
     echo "$Img" | grep "$SOC" > /dev/null 2>&1
@@ -63,11 +63,99 @@ SOMNameFinder()
 
 }
 
+EMMCIMAGE="tek-imx6_pico-nymph_rescue#134_hdmi_20210312.img"
+FLASHCODE="imx8_flash_code.sh"
 
-EMMCIMAGE="pico-imx6mm_pico-nymph_rescue#134_hdmi_20210312.img"
+#Flash EMMC script post-fixed word.
+
+#common path definition
+UUU="uuu_flash"
+IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
+UUU_DST="/uuu/linux64/uuu"
+
+#for imx8 series
+BOARDTYPE_Tail="-flash.bin"
+
+#for imx6 / imx7 series
+SPL="-SPL"
+UBOOT="-u-boot.img"
+
+BINFILE=""
+SPLFILE=""
+UBOOTFILE=""
+
+if [ -L $UUU ]
+then
+    rm -rf ./$UUU
+fi
+
+if [ -f $FLASHCODE ]
+then
+    rm -rf ./$FLASHCODE
+fi
+
+PWD="$(echo ~)"
+#make uuu_file symbolink to uuu file
+ln -s "$PWD$IMX_UUU_TOOL$UUU_DST" "$UUU"
 
 SOCID=$(SOCNameFinder $EMMCIMAGE)
 echo $SOCID
 
 SOMID=$(SOMNameFinder $EMMCIMAGE)
-echo $SOM
+echo $SOMID
+
+
+case $SOCID in
+  imx8mm|imx8mp|imx8mn|imx8mq)
+    EMMCSCRIPT="emmc_img"
+    BINFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$BOARDTYPE_Tail
+    SPLFILE=""
+    UBOOTFILE=""
+    ;;
+  imx6)
+    EMMCSCRIPT="emmc_imx6_img"
+    BINFILE=""
+    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
+    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
+    ;;
+  imx6ul)
+    EMMCSCRIPT="emmc_imx6_img"
+    BINFILE=""
+    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
+    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
+    ;;
+  imx7)
+    EMMCSCRIPT="emmc_imx7_img"
+    BINFILE=""
+    SPLFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$SPL
+    UBOOTFILE=$PWD$IMX_UUU_TOOL/$SOCID/$SOMID/$SOMID$UBOOT
+    ;;
+esac
+
+readlink $UUU
+echo $EMMCSCRIPT
+echo $BINFILE
+echo $SPLFILE
+echo $UBOOTFILE
+echo $EMMCIMAGE
+
+# Generate uuu flash script
+
+cat <<EOF >>$FLASHCODE
+#!/bin/bash
+
+EMMCSCRIPT=$EMMCSCRIPT
+BINFILE=$BINFILE
+SPLFILE=$SPLFILE
+UBOOTFILE=$UBOOTFILE
+EMMCIMAGE=$EMMCIMAGE
+
+echo "Script description :"
+echo "$UUU -d -b $EMMCSCRIPT $BINFILE $SPLFILE $UBOOTFILE $EMMCIMAGE"
+echo
+echo "command perform ..."
+echo
+sudo ./$UUU -d -b $EMMCSCRIPT $BINFILE $SPLFILE $UBOOTFILE $EMMCIMAGE
+EOF
+
+sudo chmod +x $FLASHCODE
