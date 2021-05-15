@@ -137,6 +137,7 @@ FLASHCODE_TERMEMU=$3
 #FLASHCODE="imx8_flash_code.sh"
 
 #Flash EMMC script post-fixed word.
+
 #common path definition
 UUU="uuu_flash"
 IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
@@ -163,12 +164,13 @@ then
     rm -rf ./$FLASHCODE
 fi
 
+#Obtain the Present owner Directory
 PWD="$(echo ~)"
 #make uuu_file symbolink to uuu file
 ln -s "$PWD$IMX_UUU_TOOL$UUU_DST" "$UUU"
-
+#check Image name for finding the SOCID
 SOCID=$(SOCNameFinder $EMMCIMAGE)
-
+#check Image name for finding the SOMID
 SOMID=$(SOMNameFinder $EMMCIMAGE)
 
 #Use SOCID decide the uuu flash script type - phrase 1
@@ -198,13 +200,6 @@ case $SOCID in
     ;;
 esac
 
-#readlink $UUU
-#echo $EMMCSCRIPT
-#echo $BINFILE
-#echo $SPLFILE
-#echo $UBOOTFILE
-#echo $EMMCIMAGE
-
 # Generate uuu flash script
 
 if [ "$BINFILE" != "" ]; then
@@ -225,6 +220,6 @@ sync
 sleep 1
 
 echo
-echo "Script - $FLASHCODE is Generated Succeffully."
+echo "Script - $FLASHCODE Is Generated Succefully."
 echo
 
