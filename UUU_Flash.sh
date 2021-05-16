@@ -1,9 +1,9 @@
 <<'COMMENTS'
 ************************************************************************
  Purpose           : For Quick Generate hands-on uuu flash script
- Script name       : UUU_FlashFileGen.sh
+ Script name       : UUU_Flash.sh
  Author            : lancey
- Date created      : 20210514
+ Date created      : 20210516
 -----------------------------------------------------------------------
  Revision History  : 1.0
  Date        Author      Ref    Revision (Date in YYYYMMDD format)
@@ -13,29 +13,20 @@
 COMMENTS
 imx8_flash_script_gen()
 {
-  cat <<EOF >>$1
-  #!/bin/bash
-
   EMMCSCRIPT=$EMMCSCRIPT
   BINFILE=$BINFILE
   EMMCIMAGE=$EMMCIMAGE
 
   echo "Script description :"
-  echo "$UUU -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE"
+  echo "$PWD$IMX_UUU_TOOL$UUU_DST -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE"
   echo
-  echo "command perform ..."
+  echo "command executing ..."
   echo
-  sudo ./$UUU -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE
-EOF
-
-sudo chmod +x $1
+  sudo $PWD$IMX_UUU_TOOL$UUU_DST -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE
 }
 
 imx6_7_flash_script_gen()
 {
-  cat <<EOF >>$1
-  #!/bin/bash
-
   EMMCSCRIPT=$EMMCSCRIPT
   SPLFILE=$SPLFILE
   UBOOTFILE=$UBOOTFILE
@@ -44,25 +35,9 @@ imx6_7_flash_script_gen()
   echo "Script description :"
   echo "$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE"
   echo
-  echo "command perform ..."
+  echo "command executing ..."
   echo
   sudo ./$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE
-EOF
-
-sudo chmod +x $1
-}
-
-Term_emu_script_gen()
-{
-  TERM_EMU="xfce4-terminal -H -e"
-  #Create Terminal shortcut with xfce4-terminal
-  cat <<EOF >>$1
-  #!/bin/bash
-  #launch a xfce4-terminal utility with script
-  $TERM_EMU ./$FLASHCODE
-EOF
-
-sudo chmod +x $1
 }
 
 #the sub function for determining the soc name
@@ -152,22 +127,10 @@ else
     FLASHCODE="noname.sh"
 fi
 
-FLASHCODE_TERMEMU=$3
-
-if [ -L $UUU ]
-then
-    rm -rf ./$UUU
-fi
-
-if [ -f $FLASHCODE ]
-then
-    rm -rf ./$FLASHCODE
-fi
-
 #Obtain the Present owner Directory
 PWD="$(echo ~)"
 #make uuu_file symbolink to uuu file
-ln -s "$PWD$IMX_UUU_TOOL$UUU_DST" "$UUU"
+#ln -s "$PWD$IMX_UUU_TOOL$UUU_DST" "$UUU"
 #check Image name for finding the SOCID
 SOCID=$(SOCNameFinder $EMMCIMAGE)
 #check Image name for finding the SOMID
@@ -200,6 +163,11 @@ case $SOCID in
     ;;
 esac
 
+if [ ! -f $1 ]
+then
+  echo "Image File is not existed, please check filename."
+fi
+
 # Generate uuu flash script
 
 if [ "$BINFILE" != "" ]; then
@@ -210,21 +178,5 @@ else
     imx6_7_flash_script_gen $FLASHCODE
 fi
 
-if [ "$FLASHCODE_TERMEMU" == "" ]; then
-  Term_emu_script_gen "emu_$FLASHCODE"
-else
-  Term_emu_script_gen "$FLASHCODE_TERMEMU"
-fi
 
-sync
-progress-bar 100
-
-echo
-echo "Script - $FLASHCODE Is Generated Succefully."
-echo
-
-if [ ! -f $1 ]
-then
-  echo "Image File is not existed, please check filename."
-fi
 
