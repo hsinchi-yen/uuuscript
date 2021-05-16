@@ -1,4 +1,4 @@
-<<'COMMENTS'
+: '
 ************************************************************************
  Purpose           : For Quick Generate hands-on uuu flash script
  Script name       : UUU_FlashFileGen.sh
@@ -10,7 +10,8 @@
 -----------------------------------------------------------------------
  20210514   lancey      0      initial draft for PD test purpose for all imx6,imx7,imx8 series
 ************************************************************************
-COMMENTS
+'
+
 imx8_flash_script_gen()
 {
   cat <<EOF >>$1
@@ -217,7 +218,7 @@ else
 fi
 
 sync
-progress-bar 100
+sleep 0.5
 
 echo
 echo "Script - $FLASHCODE Is Generated Succefully."
@@ -225,6 +226,6 @@ echo
 
 if [ ! -f $1 ]
 then
-  echo "Image File is not existed, please check filename."
+  echo "Assigned image file is not existed, please check filename."
 fi
 

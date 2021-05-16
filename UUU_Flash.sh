@@ -1,4 +1,4 @@
-<<'COMMENTS'
+: '
 ************************************************************************
  Purpose           : For Quick Generate hands-on uuu flash script
  Script name       : UUU_Flash.sh
@@ -10,7 +10,8 @@
 -----------------------------------------------------------------------
  20210514   lancey      0      initial draft for PD test purpose for all imx6,imx7,imx8 series
 ************************************************************************
-COMMENTS
+'
+
 imx8_flash_script_gen()
 {
   EMMCSCRIPT=$EMMCSCRIPT
