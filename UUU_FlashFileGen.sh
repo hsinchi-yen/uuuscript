@@ -17,14 +17,10 @@ imx8_flash_script_gen()
   cat <<EOF >>$1
   #!/bin/bash
 
-  EMMCSCRIPT=$EMMCSCRIPT
-  BINFILE=$BINFILE
-  EMMCIMAGE=$EMMCIMAGE
-
   echo "Script description :"
   echo "$UUU -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE"
   echo
-  echo "command perform ..."
+  echo "command executing ..."
   echo
   sudo ./$UUU -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE
 EOF
@@ -37,15 +33,10 @@ imx6_7_flash_script_gen()
   cat <<EOF >>$1
   #!/bin/bash
 
-  EMMCSCRIPT=$EMMCSCRIPT
-  SPLFILE=$SPLFILE
-  UBOOTFILE=$UBOOTFILE
-  EMMCIMAGE=$EMMCIMAGE
-
   echo "Script description :"
   echo "$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE"
   echo
-  echo "command perform ..."
+  echo "command executing ..."
   echo
   sudo ./$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE
 EOF
@@ -120,23 +111,37 @@ SOMNameFinder()
 
 }
 
+Progressbar()
+{
+  BAR='[######################################]'   # this is full bar, e.g. 42 chars
+  echo "Compiling : "
+  for i in {1..42}; do
+    echo -ne "\r${BAR:0:$i}" # print $i chars of $BAR from 0 position
+    sleep .02                 # wait 100ms between "frames"
+  done
+  echo -ne " Done !"
+  echo 
+}
+
 #EMMCIMAGE="tek-imx6_pico-nymph_rescue#134_hdmi_20210312.img"
 #FLASHCODE="imx8_flash_code.sh"
 
 #Flash EMMC script post-fixed word.
 
-#common path definition
+#================ common path definition Start======================
 UUU="uuu_flash"
 IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
 UUU_DST="/uuu/linux64/uuu"
+#================ common path definition End =======================
 
-#for imx8 series
+#for imx8 series - bin file tail word
 BOARDTYPE_Tail="-flash.bin"
 
-#for imx6 / imx7 series
+#for imx6 / imx7 series spl and uboot tail word
 SPL="-SPL"
 UBOOT="-u-boot.img"
 
+#declar 3 variables for binfile, splfile, ubootfile
 BINFILE=""
 SPLFILE=""
 UBOOTFILE=""
@@ -218,7 +223,7 @@ else
 fi
 
 sync
-sleep 0.5
+Progressbar
 
 echo
 echo "Script - $FLASHCODE Is Generated Succefully."
