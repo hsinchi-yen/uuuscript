@@ -119,20 +119,6 @@ SOMNameFinder()
 
 }
 
-if [ "$1" != "" ]; then
-    EMMCIMAGE=$1
-else
-    EMMCIMAGE="noname.img"
-fi
-
-if [ "$2" != "" ]; then
-    FLASHCODE=$2
-else
-    FLASHCODE="noname.sh"
-fi
-
-FLASHCODE_TERMEMU=$3
-
 #EMMCIMAGE="tek-imx6_pico-nymph_rescue#134_hdmi_20210312.img"
 #FLASHCODE="imx8_flash_code.sh"
 
@@ -153,6 +139,20 @@ UBOOT="-u-boot.img"
 BINFILE=""
 SPLFILE=""
 UBOOTFILE=""
+
+if [ "$1" != "" ]; then
+    EMMCIMAGE=$1
+else
+    EMMCIMAGE="noname.img"
+fi
+
+if [ "$2" != "" ]; then
+    FLASHCODE=$2
+else
+    FLASHCODE="noname.sh"
+fi
+
+FLASHCODE_TERMEMU=$3
 
 if [ -L $UUU ]
 then
@@ -222,4 +222,9 @@ sleep 1
 echo
 echo "Script - $FLASHCODE Is Generated Succefully."
 echo
+
+if [ ! -f $1 ]
+then
+  echo "Image File is not existed, please check filename."
+fi
 
