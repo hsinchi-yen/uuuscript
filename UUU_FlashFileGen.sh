@@ -232,9 +232,6 @@ if [ ! -f $1 ]
 then
   echo "Assigned image file is not existed, please check filename."
   echo
-
-  echo "command usage :"
-  echo "$0 Image_Name Script_Name"
 fi
 
 if [ "$2" == "" ]
