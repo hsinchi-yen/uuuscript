@@ -11,10 +11,7 @@
  20210514   lancey      0      initial draft for PD test purpose for all imx6,imx7,imx8 series
 ************************************************************************
 '
-imx8_flash_script_gen()  echo
-
-  echo "command usage :"
-  echo "$0 Image_Name Script_Name"
+imx8_flash_script_gen()
 {
   cat <<EOF >>$1
   #!/bin/bash
