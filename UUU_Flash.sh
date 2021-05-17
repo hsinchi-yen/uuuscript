@@ -14,10 +14,6 @@
 
 imx8_flash_script_gen()
 {
-  EMMCSCRIPT=$EMMCSCRIPT
-  BINFILE=$BINFILE
-  EMMCIMAGE=$EMMCIMAGE
-
   echo "Script description :"
   echo "$PWD$IMX_UUU_TOOL$UUU_DST -d -b $EMMCSCRIPT $BINFILE $EMMCIMAGE"
   echo
@@ -28,11 +24,6 @@ imx8_flash_script_gen()
 
 imx6_7_flash_script_gen()
 {
-  EMMCSCRIPT=$EMMCSCRIPT
-  SPLFILE=$SPLFILE
-  UBOOTFILE=$UBOOTFILE
-  EMMCIMAGE=$EMMCIMAGE
-
   echo "Script description :"
   echo "$PWD$IMX_UUU_TOOL$UUU_DST -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE"
   echo
@@ -102,7 +93,9 @@ SOMNameFinder()
 
 #common path definition
 UUU="uuu_flash"
+#================= uuu path / location ==============================
 IMX_UUU_TOOL="/Desktop/imx-mfg-uuu-tool"
+#================= uuu path / location ==============================
 UUU_DST="/uuu/linux64/uuu"
 
 #for imx8 series

@@ -116,7 +116,7 @@ Progressbar()
   echo "Compiling : "
   for i in {1..42}; do
     echo -ne "\r${BAR:0:$i}" # print $i chars of $BAR from 0 position
-    sleep .02                 # wait 100ms between "frames"
+    sleep .01                 # wait 100ms between "frames"
   done
   echo -ne " Done !"
   echo 
