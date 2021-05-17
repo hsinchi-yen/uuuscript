@@ -34,11 +34,11 @@ imx6_7_flash_script_gen()
   EMMCIMAGE=$EMMCIMAGE
 
   echo "Script description :"
-  echo "$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE"
+  echo "$PWD$IMX_UUU_TOOL$UUU_DST -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE"
   echo
   echo "command executing ..."
   echo
-  sudo ./$UUU -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE
+  sudo $PWD$IMX_UUU_TOOL$UUU_DST -d -b $EMMCSCRIPT $SPLFILE $UBOOTFILE $EMMCIMAGE
 }
 
 #the sub function for determining the soc name
@@ -102,7 +102,7 @@ SOMNameFinder()
 
 #common path definition
 UUU="uuu_flash"
-IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
+IMX_UUU_TOOL="/Desktop/imx-mfg-uuu-tool"
 UUU_DST="/uuu/linux64/uuu"
 
 #for imx8 series

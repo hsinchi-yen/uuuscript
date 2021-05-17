@@ -129,7 +129,7 @@ Progressbar()
 
 #================ common path definition Start======================
 UUU="uuu_flash"
-IMX_UUU_TOOL="/Downloads/imx-mfg-uuu-tool"
+IMX_UUU_TOOL="/Desktop/imx-mfg-uuu-tool"
 UUU_DST="/uuu/linux64/uuu"
 #================ common path definition End =======================
 
