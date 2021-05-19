@@ -9,6 +9,7 @@
  Date        Author      Ref    Revision (Date in YYYYMMDD format)
 -----------------------------------------------------------------------
  20210514   lancey      0      initial draft for PD test purpose for all imx6,imx7,imx8 series
+ 20210519	lancey		1	   change the SOMID/SOCID arrays sequence
 ************************************************************************
 '
 imx8_flash_script_gen()
@@ -61,7 +62,7 @@ SOCNameFinder()
 {
   #$1 is the filename
   Img=$1
-  SOC_ARR=(imx8mm imx8mn imx8mq imx8mp imx6 imx6ul imx7)
+  SOC_ARR=(imx8mm imx8mn imx8mq imx8mp imx7 imx6ul imx6)
 
   for SOC in "${SOC_ARR[@]}"; do
     echo "$Img" | grep "$SOC" > /dev/null 2>&1
@@ -86,8 +87,8 @@ SOMNameFinder()
    "edm-imx8mq" "pico-imx8mq" \
    "edm-g-imx8mn" \
    "edm-imx7" "tep1-imx7" "pico-imx7" \
-   "axon-imx6" "edm-imx6" "pico-imx6" "tek-imx6" \
-   "pico-imx6ul" "tek-imx6ul" "tep-imx6ul")
+   "pico-imx6ul" "tek-imx6ul" "tep-imx6ul" \
+   "axon-imx6" "edm-imx6" "pico-imx6" "tek-imx6")
 
   #imx8mm: axon-imx8mm, edm-g-imx8mm, flex-imx8mm, pico-imx8mm, xore-imx8mm
   #imx8mp: axon-imx8mp, edm-g-imx8mp

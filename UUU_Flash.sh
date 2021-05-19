@@ -37,7 +37,7 @@ SOCNameFinder()
 {
   #$1 is the filename
   Img=$1
-  SOC_ARR=(imx8mm imx8mn imx8mq imx8mp imx6 imx6ul imx7)
+  SOC_ARR=(imx8mm imx8mn imx8mq imx8mp imx6ul imx6 imx7)
 
   for SOC in "${SOC_ARR[@]}"; do
     echo "$Img" | grep "$SOC" > /dev/null 2>&1
@@ -62,8 +62,8 @@ SOMNameFinder()
    "edm-imx8mq" "pico-imx8mq" \
    "edm-g-imx8mn" \
    "edm-imx7" "tep1-imx7" "pico-imx7" \
-   "axon-imx6" "edm-imx6" "pico-imx6" "tek-imx6" \
-   "pico-imx6ul" "tek-imx6ul" "tep-imx6ul")
+   "pico-imx6ul" "tek-imx6ul" "tep-imx6ul" \
+   "axon-imx6" "edm-imx6" "pico-imx6" "tek-imx6")
 
   #imx8mm: axon-imx8mm, edm-g-imx8mm, flex-imx8mm, pico-imx8mm, xore-imx8mm
   #imx8mp: axon-imx8mp, edm-g-imx8mp
@@ -135,14 +135,14 @@ case $SOCID in
   imx8mm|imx8mp|imx8mn|imx8mq)
     EMMCSCRIPT="emmc_img"
     ;;
-  imx6)
-    EMMCSCRIPT="emmc_imx6_img"
-    ;;
   imx6ul)
     EMMCSCRIPT="emmc_imx6ul_img"
     ;;
   imx7)
     EMMCSCRIPT="emmc_imx7_img"
+    ;;
+  imx6)
+    EMMCSCRIPT="emmc_imx6_img"
     ;;
 esac
 
